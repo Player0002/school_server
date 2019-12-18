@@ -59,13 +59,14 @@ response :
 ```
 
 ```
-http://localhost:3000/router/result?name=학교명&when=날짜
+http://localhost:3000/router/result?name=학교명&when=날짜&address=주소
 ```
 
-그학교의 해당날짜의 아침, 점심, 저녁을 반환합니다.
+그학교의 해당날짜의 아침, 점심, 저녁을 반환합니다. +2019.12.18 10:35pm 기준 address가 추가되었습니다.
+중복되는 학교명이 존재하여 그 학교의 주소를 같이 받는 식으로 해결했습니다.
 
 ```
-input : http://localhost:3000/router/result?name=대구소프트웨어고등학교&when=2019.12.18
+input : http://localhost:3000/router/result?name=대구소프트웨어고등학교&when=2019.12.18&address=대구광역시 달성군 구지면 창리로11길 93
 response:
 {
     "breakfast": [

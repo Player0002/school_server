@@ -1,6 +1,5 @@
 let util = {}
 let weekEngShortName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-let subdata = ["breakfast", "lunch", "dinner"]
 util.getFood = function(arr, date){
     let returnObj = {}
     let data = new Date(date)
@@ -8,7 +7,6 @@ util.getFood = function(arr, date){
     for(i = 0; i < 7; i++){
         returnObj[weekEngShortName[i]] = arr[i]
     }
-    console.log(returnObj[weekEngShortName[new Date(date).getDay()]])
     return returnObj[weekEngShortName[new Date(date).getDay()]]
 }
 
@@ -43,7 +41,6 @@ util.successFalse = function(err, message){
         /* 제주 */ //JEJU("jje.go.kr")
 util.getUrl = function(urls){
     let url = urls
-    console.log(url)
     if(url.includes("인천")) return "ice.go.kr"
     else if(url.includes("부산")) return "pen.go.kr"
     else if(url.includes("광주")) return "gen.go.kr"

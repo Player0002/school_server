@@ -26,9 +26,21 @@ let findSchoolInfo = function(schName){
         })
     })
 }
-let findFood = function(schName, when, idx){
+let findSchoolInfoReal = function(schName, address){
+    return new Promise(function(resolve, reject){
+        let searchName =  schName 
+        connection.query('select * from school_data where name=? AND address=?', [searchName,address], function(err, rows){
+            if(err || rows.length == 0){
+                reject(util.successFalse(err, searchName))
+            }else{
+                resolve(util.successTrue(rows))
+            }
+        })
+    })
+}
+let findFood = function(schName, when, idx, address){
     return new Promise(function(res, rej){
-        findSchoolInfo(schName).then(function(data){
+        findSchoolInfoReal(schName, address).then(function(data){
             let schData = data.data[0]
             let schCode = schData.code
             let schNum = util.getNum(schData.type2)
@@ -46,9 +58,6 @@ let findFood = function(schName, when, idx){
                     if(i > 14) return false;
                     list[i - 7] = $(this).text().split('\n')
                 })
-                console.log("https://stu."+ util.getUrl(url) + "/sts_sci_md01_001.do?schulCode="+schCode +"&schulKndScCode="+
-                schNum+"&schulCrseScCode="+schNum+"&schYmd="+
-                when+"&schMmealScCode=" + idx)
                 res(util.getFood(list, when))
             })
         }).catch(function(err){
@@ -70,22 +79,18 @@ router.get('/search', function(req, res, next){
 
 router.get('/result', function(req, res, next){
     let obj = new Object();
-    findFood(req.query.name, req.query.when, 1)
+    findFood(req.query.name, req.query.when, 1, req.query.address)
     .then(function(data){
         obj['breakfast'] = data
-        console.log("-----------")
-        console.log(data)
-        console.log(obj)
-        return(findFood(req.query.name, req.query.when, 2))
+
+        return(findFood(req.query.name, req.query.when, 2, req.query.address))
     }).then(function(data){
         obj['lunch'] = data
-        console.log("-----------")
-        console.log(obj)
-        return(findFood(req.query.name, req.query.when, 3))
+
+        return(findFood(req.query.name, req.query.when, 3, req.query.address))
     }).then(function(data){
         obj['dinner'] = data
-        console.log("-----------")
-        console.log(obj)
+
         res.json(obj)
     }).catch(function(err){
         obj[0] = err
@@ -110,18 +115,9 @@ router.get('/bab', function(req, res, next){
             if(i > 14) return false;
             list[i - 7] = $(this).text().split('\n')
         })
-        for(let i = 0; i < 8; i++) {
-            console.log(list[i])
-        }
-        findSchoolInfo("대구소").then(function(result){
-            console.log(result)
-            console.log($bodyList.html())
-            console.log('https://stu.'+ util.getUrl(url) + '/sts_sci_md01_001.do?schulCode='+id +"&schulKndScCode="+isHigh+"&schulCrseScCode="+isHigh+"&schYmd="+util.getToday()+"&schMmealScCode=" + type)
-            res.json(util.getFood(list))
-        }).catch(function(err){
-            console.log(err)
-            res.json(err)
-        })
+
+        res.json(util.getFood(list))
+
     })
     
 })
